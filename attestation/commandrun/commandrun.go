@@ -96,6 +96,7 @@ type ProcessInfo struct {
 	Cmdline          string                          `json:"cmdline,omitempty"`
 	ExeDigest        cryptoutil.DigestSet            `json:"exedigest,omitempty"`
 	OpenedFiles      map[string]cryptoutil.DigestSet `json:"openedfiles,omitempty"`
+	DeletedFiles     []string						 `json:"deletedfiles,omitempty"`
 	Environ          string                          `json:"environ,omitempty"`
 	SpecBypassIsVuln bool                            `json:"specbypassisvuln,omitempty"`
 }

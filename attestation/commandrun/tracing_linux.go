@@ -218,6 +218,24 @@ func (p *ptraceContext) handleSyscall(pid int, regs unix.PtraceRegs) error {
 		}
 
 		procInfo.OpenedFiles[file] = digestSet
+	case unix.SYS_UNLINK:
+		file, err := p.readSyscallReg(pid, argArray[0], MAX_PATH_LEN)
+		if err != nil {
+			return err
+		}
+
+		procInfo := p.getProcInfo(pid)
+		procInfo.DeletedFiles = append(procInfo.DeletedFiles, file)
+		// fmt.Printf("    Caught a SYS_UNLINK syscal: %s\n", file)
+	case unix.SYS_UNLINKAT:
+		file, err := p.readSyscallReg(pid, argArray[1], MAX_PATH_LEN)
+		if err != nil {
+			return err
+		}
+
+		procInfo := p.getProcInfo(pid)
+		procInfo.DeletedFiles = append(procInfo.DeletedFiles, file)
+		// fmt.Printf("    Caught a SYS_UNLINKAT syscal: %s\n", file)
 	}
 
 	return nil
@@ -227,8 +245,9 @@ func (ctx *ptraceContext) getProcInfo(pid int) *ProcessInfo {
 	procInfo, ok := ctx.processes[pid]
 	if !ok {
 		procInfo = &ProcessInfo{
-			ProcessID:   pid,
-			OpenedFiles: make(map[string]cryptoutil.DigestSet),
+			ProcessID:    pid,
+			OpenedFiles:  make(map[string]cryptoutil.DigestSet),
+			DeletedFiles: make([]string, 0),
 		}
 
 		ctx.processes[pid] = procInfo
