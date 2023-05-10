@@ -226,7 +226,7 @@ func (p *ptraceContext) handleSyscall(pid int, regs unix.PtraceRegs) error {
 
 		procInfo := p.getProcInfo(pid)
 		procInfo.DeletedFiles = append(procInfo.DeletedFiles, file)
-		// fmt.Printf("    Caught a SYS_UNLINK syscal: %s\n", file)
+		fmt.Printf("    Caught a SYS_UNLINK syscal: %s\n", file)
 	case unix.SYS_UNLINKAT:
 		file, err := p.readSyscallReg(pid, argArray[1], MAX_PATH_LEN)
 		if err != nil {
@@ -235,7 +235,7 @@ func (p *ptraceContext) handleSyscall(pid int, regs unix.PtraceRegs) error {
 
 		procInfo := p.getProcInfo(pid)
 		procInfo.DeletedFiles = append(procInfo.DeletedFiles, file)
-		// fmt.Printf("    Caught a SYS_UNLINKAT syscal: %s\n", file)
+		fmt.Printf("    Caught a SYS_UNLINKAT syscal: %s\n", file)
 	}
 
 	return nil
