@@ -1,4 +1,4 @@
-module github.com/testifysec/go-witness
+module github.com/cppvik/go-witness
 
 go 1.19
 
